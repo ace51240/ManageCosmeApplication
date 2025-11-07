@@ -1,0 +1,50 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ リポジトリをチェックアウト
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Java環境のセットアップ（Android Gradleに必須）
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # 3️⃣ Gradleキャッシュ（高速化）
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # 4️⃣ 実行権限付与（Bitrise同様）
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      # 5️⃣ APKビルド実行
+      - name: Build Debug APK
+        run: ./gradlew :composeApp:assembleDebug
+
+      # 6️⃣ 成果物をアップロード（Artifactsに保存される）
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
