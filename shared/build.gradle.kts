@@ -66,6 +66,7 @@ kotlin {
                 implementation(libs.sqldelight.driver.common)
                 implementation(libs.sqldelight.runtime)
                 implementation(libs.sqldelight.coroutines)
+                implementation(libs.koin.core)
             }
         }
 
@@ -81,6 +82,7 @@ kotlin {
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
                 implementation(libs.sqldelight.driver.android)
+                implementation(libs.koin.android)
             }
         }
 
