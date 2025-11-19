@@ -15,6 +15,7 @@ kotlin = "2.2.20"
 kotlinStdlib = "2.2.20"
 runner = "1.7.0"
 core = "1.7.0"
+datatime = "0.7.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -30,6 +31,7 @@ androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
+kotlinx-datatime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "datatime" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
