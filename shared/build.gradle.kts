@@ -12,8 +12,8 @@ kotlin {
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
         namespace = "com.app.cosme.shared"
-        compileSdk = 36
-        minSdk = 26
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         withHostTestBuilder {
         }
@@ -63,7 +63,6 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
                 implementation(libs.kotlinx.datatime)
-                implementation(libs.sqldelight.driver.common)
                 implementation(libs.sqldelight.runtime)
                 implementation(libs.sqldelight.coroutines)
                 implementation(libs.koin.core)
@@ -82,7 +81,6 @@ kotlin {
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
                 implementation(libs.sqldelight.driver.android)
-                implementation(libs.koin.android)
             }
         }
 
