@@ -5,23 +5,25 @@ import com.app.cosme.shared.repository.CosmeticRepository
 import com.app.cosme.shared.repository.CosmeticRepositoryImpl
 import com.app.cosme.shared.repository.RecipeRepository
 import com.app.cosme.shared.repository.RecipeRepositoryImpl
+import com.app.cosme.shared.usecase.RegisterCosmeticUseCase
 import org.koin.core.context.startKoin
+import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
-fun initKoin(appDeclaration: KoinAppDeclaration = {}) =
+fun initKoin(appDeclaration: KoinAppDeclaration = {}, vararg additionalModules: Module) =
     startKoin {
         appDeclaration()
-        modules(platformModule, sharedModule)
+        modules(listOf(platformModule, sharedModule) + additionalModules)
     }
-
-// for iOS
-fun initKoin() = initKoin {}
 
 val sharedModule = module {
     single { CosmeDatabase(driver = get()) }
     single<CosmeticRepository> { CosmeticRepositoryImpl(database = get()) }
     single<RecipeRepository> { RecipeRepositoryImpl(database = get()) }
+
+    // UseCase
+    factory { RegisterCosmeticUseCase(cosmeticRepository = get()) }
 }
 
-expect val platformModule: org.koin.core.module.Module
+expect val platformModule: Module
