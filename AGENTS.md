@@ -428,3 +428,11 @@
 * [バリデーション] → クラウドAPI呼び出し後、自動補完
 * [アカウント連携] → Firebase Auth / LINE SDK 経由
 * [クラウド共有] → Firebase Firestore or Supabase 予定
+
+
+## アーキテクチャ
+
+MVVMまたはMVPを採用。
+Compose MultiPlatformで画面UIを作成。
+Material3でUIオブジェクトを作成します。
+
