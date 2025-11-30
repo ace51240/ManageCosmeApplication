@@ -193,6 +193,9 @@
 └────────────────────────────┘
 ```
 
+ホーム画面の実装ファイル
+- composeApp/src/commonMain/kotlin/com/app/cosme/ui/HomeScreen.kt
+
 ---
 
 ## ➕ 登録メニュー（モーダル）
@@ -222,6 +225,9 @@
 │ [保存] ボタン                                 │
 └────────────────────────────┘
 ```
+
+手動登録画面の実装ファイル
+- composeApp/src/commonMain/kotlin/com/app/cosme/ui/RegisterCosmeticScreen.kt
 
 ---
 
