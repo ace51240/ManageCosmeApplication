@@ -8,11 +8,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -21,13 +25,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.app.cosme.manage.RegisterCosmeticUiState
 import com.app.cosme.manage.RegisterCosmeticViewModel
+import managecosmeapplication.composeapp.generated.resources.Res
+import managecosmeapplication.composeapp.generated.resources.arrow_back_24px
+import managecosmeapplication.composeapp.generated.resources.favorite_24px
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun RegisterCosmeticScreen(
+    navController: NavController? = null,
     viewModel: RegisterCosmeticViewModel = koinViewModel<RegisterCosmeticViewModel>()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -38,10 +48,14 @@ fun RegisterCosmeticScreen(
         onProductNameChanged = viewModel::onProductNameChanged,
         onCategoryNameChanged = viewModel::onCategoryNameChanged,
         onMemoChanged = viewModel::onMemoChanged,
-        onRegisterClick = viewModel::registerCosmetic
+        onRegisterClick = viewModel::registerCosmetic,
+        onNavigateBack = {
+            navController?.popBackStack()
+        }
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterCosmeticContent(
     uiState: RegisterCosmeticUiState,
@@ -49,14 +63,15 @@ fun RegisterCosmeticContent(
     onProductNameChanged: (String) -> Unit,
     onCategoryNameChanged: (String) -> Unit,
     onMemoChanged: (String) -> Unit,
-    onRegisterClick: () -> Unit
+    onRegisterClick: () -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(uiState.isRegistered) {
         if (uiState.isRegistered) {
             snackBarHostState.showSnackbar("コスメを登録しました！")
-            // TODO: 登録後に画面を閉じるなどの処理
+            onNavigateBack()
         }
     }
 
@@ -67,6 +82,19 @@ fun RegisterCosmeticContent(
     }
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("コスメ登録") },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            painter = painterResource(Res.drawable.arrow_back_24px),
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+            )
+        },
         snackbarHost = { SnackbarHost(snackBarHostState) }
     ) { paddingValues ->
         Column(
@@ -131,6 +159,7 @@ fun RegisterCosmeticScreenPreview() {
         onProductNameChanged = {},
         onCategoryNameChanged = {},
         onMemoChanged = {},
-        onRegisterClick = {}
+        onRegisterClick = {},
+        onNavigateBack = {}
     )
 }

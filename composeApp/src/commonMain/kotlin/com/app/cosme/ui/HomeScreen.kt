@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import managecosmeapplication.composeapp.generated.resources.Res
 import managecosmeapplication.composeapp.generated.resources.add_24px
 import managecosmeapplication.composeapp.generated.resources.edit_24px
@@ -65,7 +66,7 @@ private val dummyCosmetics = List(20) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController? = null) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
 
@@ -121,7 +122,10 @@ fun HomeScreen() {
                                 contentDescription = "Manual Registration"
                             )
                         },
-                        modifier = Modifier.clickable { /* TODO: 手動登録画面へ */ }
+                        modifier = Modifier.clickable {
+                            showBottomSheet = false
+                            navController?.navigate("register_cosmetic")
+                        }
                     )
                     ListItem(
                         headlineContent = { Text("写真登録") },
