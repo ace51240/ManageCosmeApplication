@@ -104,8 +104,12 @@ fun HomeScreen(navController: NavController? = null) {
                 }
             }
 
-            // TODO: タブに応じて表示するコンテンツを切り替える
-            CosmeticList(cosmetics = dummyCosmetics)
+            CosmeticList(
+                cosmetics = dummyCosmetics,
+                onItemClick = { item ->
+                    navController?.navigate("cosmetic_detail/${item.id}")
+                }
+            )
         }
 
         if (showBottomSheet) {
@@ -154,22 +158,33 @@ fun HomeScreen(navController: NavController? = null) {
 }
 
 @Composable
-fun CosmeticList(cosmetics: List<CosmeticItem>) {
+fun CosmeticList(
+    cosmetics: List<CosmeticItem>,
+    onItemClick: (CosmeticItem) -> Unit
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(cosmetics) { cosmetic ->
-            CosmeticCard(cosmetic)
+            CosmeticCard(
+                cosmetic = cosmetic,
+                onClick = { onItemClick(cosmetic) }
+            )
         }
     }
 }
 
 @Composable
-fun CosmeticCard(cosmetic: CosmeticItem) {
+fun CosmeticCard(
+    cosmetic: CosmeticItem,
+    onClick: () -> Unit
+) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -203,11 +218,12 @@ fun HomeScreenPreview() {
 @Composable
 fun CosmeticCardPreview() {
     CosmeticCard(
-        CosmeticItem(
+        cosmetic = CosmeticItem(
             id = 1,
             name = "超細芯アイブロウ",
             brand = "CEZANNE",
             isFavorite = true
-        )
+        ),
+        onClick = {}
     )
 }
