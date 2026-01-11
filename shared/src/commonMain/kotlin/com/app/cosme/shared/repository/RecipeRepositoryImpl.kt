@@ -1,46 +1,17 @@
 package com.app.cosme.shared.repository
 
-import app.cash.sqldelight.coroutines.asFlow
-import app.cash.sqldelight.coroutines.mapToList
-import com.app.cosme.shared.db.CosmeDatabase
-import com.app.cosme.shared.db.Cosmetic
-import com.app.cosme.shared.db.Recipe
-import kotlinx.coroutines.Dispatchers
+import Recipe
+import RecipeDao
 import kotlinx.coroutines.flow.Flow
 
-class RecipeRepositoryImpl(private val database: CosmeDatabase) : RecipeRepository {
-    private val queries = database.cosmeDatabaseQueries
-    override fun getAllRecipes(): Flow<List<Recipe>> {
-        return queries.selectAllRecipes().asFlow().mapToList(Dispatchers.Default)
-    }
+class RecipeRepositoryImpl(private val recipeDao: RecipeDao) : RecipeRepository {
+    override fun getAllRecipes(): Flow<List<Recipe>> = recipeDao.getAllRecipes()
 
-    override suspend fun getRecipeById(id: Long): Recipe? {
-        return queries.selectRecipeById(id).executeAsOneOrNull()
-    }
+    override fun getRecipeById(id: Long): Flow<Recipe> = recipeDao.getRecipeById(id)
 
-    override suspend fun insertRecipe(title: String, memo: String?, createdAt: Long): Long {
-        queries.insertRecipe(null, title, memo, createdAt)
-        return queries.lastInsertRowId().executeAsOne()
-    }
+    override suspend fun insertRecipe(recipe: Recipe): Long = recipeDao.insertRecipe(recipe)
 
-    override suspend fun updateRecipe(id: Long, title: String, memo: String?) {
-        queries.updateRecipe(title, memo, id)
-    }
+    override suspend fun updateRecipe(recipe: Recipe) = recipeDao.updateRecipe(recipe)
 
-    override suspend fun deleteRecipe(id: Long) {
-        queries.deleteRecipe(id)
-    }
-
-    override suspend fun addCosmeticToRecipe(recipeId: Long, cosmeticId: Long) {
-        queries.insertRecipeCosmetic(recipeId, cosmeticId)
-    }
-
-    override suspend fun removeCosmeticsFromRecipe(recipeId: Long) {
-        queries.deleteRecipeCosmetics(recipeId)
-    }
-
-    override fun getCosmeticsForRecipe(recipeId: Long): Flow<List<Cosmetic>> {
-        return queries.selectCosmeticsForRecipe(recipeId)
-            .asFlow().mapToList(Dispatchers.Default)
-    }
+    override suspend fun deleteRecipe(recipe: Recipe) = recipeDao.deleteRecipe(recipe)
 }
